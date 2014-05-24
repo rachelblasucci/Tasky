@@ -6,10 +6,11 @@ open System
 open System.IO
 open Data
 
-type TaskDataSource(tasks: task[]) = 
-    inherit UITableViewDataSource()
+type TaskDataSource(tasks: task list, navigation: UINavigationController) = 
+    inherit UITableViewSource()
     member x.cellIdentifier = "TaskCell"
     override x.RowsInSection(view, section) = tasks.Length
+    override x.CanEditRow (view, indexPath) = true
     override x.GetCell(view, indexPath) = 
         let t = tasks.[indexPath.Item]
         let cell =
@@ -19,6 +20,15 @@ type TaskDataSource(tasks: task[]) =
                 | _ -> newCell
         cell.TextLabel.Text <- t.Description
         cell
+    override x.RowSelected (tableView, indexPath) = 
+        tableView.DeselectRow (indexPath, false)
+        navigation.PushViewController (new AddTaskViewController(tasks.[indexPath.Item], false), true)
+    override x.CommitEditingStyle(view, editingStyle, indexPath) = 
+        match editingStyle with 
+            | UITableViewCellEditingStyle.Delete -> 
+                Data.DeleteTask tasks.[indexPath.Item].Description
+                view.DeleteRows([|indexPath|], UITableViewRowAnimation.Fade)
+            | _ -> Console.WriteLine "CommitEditingStyle:None called"
 
 [<Register ("TaskyViewController")>]
 type TaskyViewController () as this =
@@ -28,17 +38,17 @@ type TaskyViewController () as this =
 
     let addNewTask = 
         new EventHandler(fun sender eventargs -> 
-            this.NavigationController.PushViewController <| (new AddTaskViewController(), false)
+            this.NavigationController.PushViewController (new AddTaskViewController(), true)
         )
 
     override this.ViewDidLoad () =
         base.ViewDidLoad ()
         this.NavigationItem.SetRightBarButtonItem (new UIBarButtonItem(UIBarButtonSystemItem.Add, addNewTask), false)
         table.Frame <- this.View.Bounds
-        table.DataSource <- new TaskDataSource(Data.GetIncompleteTasks())
         this.View.Add table 
 
     override this.ViewWillAppear animated =
         base.ViewWillAppear animated
-        table.DataSource <- new TaskDataSource(Data.GetIncompleteTasks())
+        table.Source <- new TaskDataSource(Data.GetIncompleteTasks (), this.NavigationController)
         table.ReloadData()
+    
