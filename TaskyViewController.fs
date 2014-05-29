@@ -10,7 +10,7 @@ type TaskDataSource(tasks: task list, navigation: UINavigationController) =
     inherit UITableViewSource()
     member x.cellIdentifier = "TaskCell"
     override x.RowsInSection(view, section) = tasks.Length
-    override x.CanEditRow (view, indexPath) = true
+//    override x.CanEditRow (view, indexPath) = true
     override x.GetCell(view, indexPath) = 
         let t = tasks.[indexPath.Item]
         let cell =
@@ -23,12 +23,12 @@ type TaskDataSource(tasks: task list, navigation: UINavigationController) =
     override x.RowSelected (tableView, indexPath) = 
         tableView.DeselectRow (indexPath, false)
         navigation.PushViewController (new AddTaskViewController(tasks.[indexPath.Item], false), true)
-    override x.CommitEditingStyle(view, editingStyle, indexPath) = 
-        match editingStyle with 
-            | UITableViewCellEditingStyle.Delete -> 
-                Data.DeleteTask tasks.[indexPath.Item].Description
-                view.DeleteRows([|indexPath|], UITableViewRowAnimation.Fade)
-            | _ -> Console.WriteLine "CommitEditingStyle:None called"
+//    override x.CommitEditingStyle(view, editingStyle, indexPath) = 
+//        match editingStyle with 
+//            | UITableViewCellEditingStyle.Delete -> 
+//                Data.DeleteTask tasks.[indexPath.Item].Description
+//                view.DeleteRows([|indexPath|], UITableViewRowAnimation.Fade)
+//            | _ -> Console.WriteLine "CommitEditingStyle:None called"
 
 [<Register ("TaskyViewController")>]
 type TaskyViewController () as this =

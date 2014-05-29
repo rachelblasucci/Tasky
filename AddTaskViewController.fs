@@ -64,7 +64,9 @@ type AddTaskViewController (task:task, isNew:bool) =
         addUpdateButton.SetTitle(buttonTitle, UIControlState.Normal)
         addView.Add addUpdateButton
 
-        if (not isNew) then
+        if isNew then
+            addedLabel.Frame <- new RectangleF(20.f, 214.f, 280.f, 50.f)
+        else
             let deleteButton = UIButton.FromType(UIButtonType.RoundedRect)
             deleteButton.Frame <- new RectangleF(20.f, 214.f, 280.f, 50.f)
 
