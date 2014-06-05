@@ -6,7 +6,6 @@ open MonoTouch.Foundation
 open System.Drawing
 open Data
 
-[<Register ("AddTaskViewController")>]
 type AddTaskViewController (task:task, isNew:bool) =
     inherit UIViewController ()
     new() = new AddTaskViewController ({Description=""; Complete=false}, true)

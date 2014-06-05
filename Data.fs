@@ -1,4 +1,5 @@
-﻿namespace Tasky 
+﻿// TYPE PROVIDERS
+namespace Tasky 
 open FSharp.Data.Sql
 open System
 open System.IO
@@ -19,12 +20,6 @@ module Data =
             |> Seq.filter (fun t -> t.complete = 0L)
             |> Seq.map (fun t -> {Description=t.task; Complete=false})
             |> Seq.toList
-
-//        let tasks = query { for data in ctx.``[main].[tasks]`` do 
-//                            where (data.complete = 0L)
-//                            select (data.task, data.complete) }
-//                        |> Seq.toList
-//        tasks |> List.map (fun (t, u) -> {Description=t; Complete = false})
 
     let private findTask description = ctx.``[main].[tasks]``
                                         |> Seq.find (fun t -> t.task = description)

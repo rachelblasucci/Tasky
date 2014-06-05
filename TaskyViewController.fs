@@ -30,19 +30,17 @@ type TaskDataSource(tasks: task list, navigation: UINavigationController) =
 //                view.DeleteRows([|indexPath|], UITableViewRowAnimation.Fade)
 //            | _ -> Console.WriteLine "CommitEditingStyle:None called"
 
-[<Register ("TaskyViewController")>]
-type TaskyViewController () as this =
+type TaskyViewController () =
     inherit UIViewController ()
 
     let table = new UITableView()
 
-    let addNewTask = 
-        new EventHandler(fun sender eventargs -> 
-            this.NavigationController.PushViewController (new AddTaskViewController(), true)
-        )
-
     override this.ViewDidLoad () =
         base.ViewDidLoad ()
+        let addNewTask = 
+            new EventHandler(fun sender eventargs -> 
+                this.NavigationController.PushViewController (new AddTaskViewController(), true)
+            )
         this.NavigationItem.SetRightBarButtonItem (new UIBarButtonItem(UIBarButtonSystemItem.Add, addNewTask), false)
         table.Frame <- this.View.Bounds
         this.View.Add table 
