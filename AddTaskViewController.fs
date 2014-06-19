@@ -57,9 +57,7 @@ type AddTaskViewController (task:task, isNew:bool) =
             )
 
         addUpdateButton.TouchUpInside.AddHandler addUpdateHandler
-        let buttonTitle = match isNew with 
-                            | true -> "Add task"
-                            | false -> "Update task"
+        let buttonTitle = "Save"
         addUpdateButton.SetTitle(buttonTitle, UIControlState.Normal)
         addView.Add addUpdateButton
 

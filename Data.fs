@@ -1,5 +1,4 @@
-﻿// TYPE PROVIDERS
-namespace Tasky 
+﻿namespace Tasky 
 open FSharp.Data.Sql
 open System
 open System.IO
