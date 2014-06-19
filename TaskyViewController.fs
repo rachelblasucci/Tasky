@@ -3,14 +3,16 @@
 open MonoTouch.UIKit
 open MonoTouch.Foundation
 open System
+open System.Collections.Generic
 open System.IO
 open Data
 
-type TaskDataSource(tasks: task list, navigation: UINavigationController) = 
+type TaskDataSource(tasksource: task list, navigation: UINavigationController) = 
     inherit UITableViewSource()
+    let tasks = new List<task>(tasksource)
     member x.cellIdentifier = "TaskCell"
-    override x.RowsInSection(view, section) = tasks.Length
-//    override x.CanEditRow (view, indexPath) = true
+    override x.RowsInSection(view, section) = tasks.Count
+    override x.CanEditRow (view, indexPath) = true
     override x.GetCell(view, indexPath) = 
         let t = tasks.[indexPath.Item]
         let cell =
@@ -23,12 +25,13 @@ type TaskDataSource(tasks: task list, navigation: UINavigationController) =
     override x.RowSelected (tableView, indexPath) = 
         tableView.DeselectRow (indexPath, false)
         navigation.PushViewController (new AddTaskViewController(tasks.[indexPath.Item], false), true)
-//    override x.CommitEditingStyle(view, editingStyle, indexPath) = 
-//        match editingStyle with 
-//            | UITableViewCellEditingStyle.Delete -> 
-//                Data.DeleteTask tasks.[indexPath.Item].Description
-//                view.DeleteRows([|indexPath|], UITableViewRowAnimation.Fade)
-//            | _ -> Console.WriteLine "CommitEditingStyle:None called"
+    override x.CommitEditingStyle(view, editingStyle, indexPath) = 
+        match editingStyle with 
+            | UITableViewCellEditingStyle.Delete ->
+                Data.DeleteTask tasks.[indexPath.Item].Description
+                tasks.RemoveAt(indexPath.Item)
+                view.DeleteRows([|indexPath|], UITableViewRowAnimation.Fade)
+            | _ -> Console.WriteLine "CommitEditingStyle:None called"
 
 type TaskyViewController () =
     inherit UIViewController ()
@@ -47,6 +50,6 @@ type TaskyViewController () =
 
     override this.ViewWillAppear animated =
         base.ViewWillAppear animated
-        table.Source <- new TaskDataSource(Data.GetIncompleteTasks (), this.NavigationController)
+        table.Source <- new TaskDataSource(Data.GetIncompleteTasks(), this.NavigationController)
         table.ReloadData()
     
