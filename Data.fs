@@ -12,17 +12,12 @@ module Data =
 
     type task = { Description : string; mutable Complete : bool; }
 
-    let ctx = sql.GetDataContext()
+    let private ctx = sql.GetDataContext()
 
-    let GetIncompleteTasks() = 
-//        ctx.``[main].[tasks]``
-//            |> Seq.filter (fun t -> t.complete = 0L)
-//            |> Seq.map (fun t -> {Description=t.task; Complete=false})
-//            |> Seq.toList
-
+    let GetIncompleteTasks () = 
         query { for data in ctx.``[main].[tasks]`` do 
                     where (data.complete = 0L)
-                    select {Description=data.task; Complete = false} }
+                    select {Description=data.task; Complete = false}}
                 |> Seq.toList
 
     let private findTask description = ctx.``[main].[tasks]``

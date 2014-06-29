@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{4925A630-B079-445d-BCD4-3A9C94FE9307}") = "Tasky", "Tasky.fsproj", "{122204D0-B1B1-4014-9F70-D32EC9E14632}"
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "Tasky", "Tasky.fsproj", "{122204D0-B1B1-4014-9F70-D32EC9E14632}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

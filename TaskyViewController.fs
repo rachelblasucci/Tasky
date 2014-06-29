@@ -12,7 +12,6 @@ type TaskDataSource(tasksource: task list, navigation: UINavigationController) =
     let tasks = new List<task>(tasksource)
     member x.cellIdentifier = "TaskCell"
     override x.RowsInSection(view, section) = tasks.Count
-    override x.CanEditRow (view, indexPath) = true
     override x.GetCell(view, indexPath) = 
         let t = tasks.[indexPath.Item]
         let cell =
@@ -25,6 +24,7 @@ type TaskDataSource(tasksource: task list, navigation: UINavigationController) =
     override x.RowSelected (tableView, indexPath) = 
         tableView.DeselectRow (indexPath, false)
         navigation.PushViewController (new AddTaskViewController(tasks.[indexPath.Item], false), true)
+    override x.CanEditRow (view, indexPath) = true
     override x.CommitEditingStyle(view, editingStyle, indexPath) = 
         match editingStyle with 
             | UITableViewCellEditingStyle.Delete ->
@@ -32,6 +32,7 @@ type TaskDataSource(tasksource: task list, navigation: UINavigationController) =
                 tasks.RemoveAt(indexPath.Item)
                 view.DeleteRows([|indexPath|], UITableViewRowAnimation.Fade)
             | _ -> Console.WriteLine "CommitEditingStyle:None called"
+
 
 type TaskyViewController () =
     inherit UIViewController ()
@@ -52,4 +53,3 @@ type TaskyViewController () =
         base.ViewWillAppear animated
         table.Source <- new TaskDataSource(Data.GetIncompleteTasks(), this.NavigationController)
         table.ReloadData()
-    
