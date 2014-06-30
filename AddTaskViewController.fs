@@ -11,12 +11,14 @@ type AddTaskViewController (task:task, isNew:bool) =
     new() = new AddTaskViewController ({Description=""; Complete=false}, true)
     override this.ViewDidLoad () =
         base.ViewDidLoad ()
+
         let addView = new UIView(this.View.Bounds)
         addView.BackgroundColor <- UIColor.White
 
         let description = new UITextField(new RectangleF(20.f, 64.f, 280.f, 50.f))
         description.Text <- task.Description
         description.Placeholder <- "task description"
+        addView.Add description
 
         let completeLabel = new UILabel(new RectangleF(20.f, 114.f, 100.f, 30.f))
         completeLabel.Text <- "Complete "
@@ -31,15 +33,8 @@ type AddTaskViewController (task:task, isNew:bool) =
         completeCheck.TouchDragInside.AddHandler changeCompleteStatus
         addView.Add completeCheck
 
-        let addedLabel = new UILabel(new RectangleF(20.f, 264.f, 200.f, 50.f))
+        let addedLabel = new UILabel(new RectangleF(20.f, 214.f, 280.f, 50.f))
         addView.Add addedLabel
-
-        let clearLabel = 
-            new EventHandler(fun sender eventargs -> 
-                addedLabel.Text <- ""
-            )
-        description.TouchDown.AddHandler clearLabel
-        addView.Add description
 
         let addUpdateButton = UIButton.FromType(UIButtonType.RoundedRect)
         addUpdateButton.Frame <- new RectangleF(20.f, 164.f, 280.f, 50.f)
@@ -57,26 +52,14 @@ type AddTaskViewController (task:task, isNew:bool) =
             )
 
         addUpdateButton.TouchUpInside.AddHandler addUpdateHandler
-        let buttonTitle = "Save"
-        addUpdateButton.SetTitle(buttonTitle, UIControlState.Normal)
+        addUpdateButton.SetTitle("Save", UIControlState.Normal)
         addView.Add addUpdateButton
 
-        if isNew then
-            addedLabel.Frame <- new RectangleF(20.f, 214.f, 280.f, 50.f)
-        else
-            let deleteButton = UIButton.FromType(UIButtonType.RoundedRect)
-            deleteButton.Frame <- new RectangleF(20.f, 214.f, 280.f, 50.f)
-
-            let deleteHandler = 
-                new EventHandler(fun sender eventargs -> 
-                    Data.DeleteTask description.Text
-                    addedLabel.Text <- "Deleted!"
-                    description.Text <- ""
-                )
-
-            deleteButton.TouchUpInside.AddHandler deleteHandler
-            deleteButton.SetTitle("Delete task", UIControlState.Normal)
-            addView.Add deleteButton
+        let clearLabel = 
+            new EventHandler(fun sender eventargs -> 
+                addedLabel.Text <- ""
+            )
+        description.TouchDown.AddHandler clearLabel
 
         this.View.Add addView
        

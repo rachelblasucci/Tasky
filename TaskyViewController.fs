@@ -33,7 +33,6 @@ type TaskDataSource(tasksource: task list, navigation: UINavigationController) =
                 view.DeleteRows([|indexPath|], UITableViewRowAnimation.Fade)
             | _ -> Console.WriteLine "CommitEditingStyle:None called"
 
-
 type TaskyViewController () =
     inherit UIViewController ()
 
