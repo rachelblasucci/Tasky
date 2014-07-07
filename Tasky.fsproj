@@ -121,7 +121,7 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="FSharp.Data.SqlProvider">
-      <HintPath>..\..\Third Party\SQLProvider\bin\FSharp.Data.SqlProvider.dll</HintPath>
+      <HintPath>References\FSharp.Data.SqlProvider.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
