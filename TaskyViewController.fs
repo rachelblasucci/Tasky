@@ -9,16 +9,15 @@ open Data
 
 type TaskDataSource(tasksource: task list, navigation: UINavigationController) = 
     inherit UITableViewSource()
-    let tasks = new List<task>(tasksource)
-    member x.cellIdentifier = "TaskCell"
+    let tasks = ResizeArray(tasksource)
+    let cellIdentifier = "TaskCell"
     override x.RowsInSection(view, section) = tasks.Count
     override x.GetCell(view, indexPath) = 
         let t = tasks.[indexPath.Item]
         let cell =
-            let newCell = view.DequeueReusableCell x.cellIdentifier 
-            match newCell with 
-                | null -> new UITableViewCell(UITableViewCellStyle.Default, x.cellIdentifier)
-                | _ -> newCell
+            match view.DequeueReusableCell cellIdentifier with 
+            | null -> new UITableViewCell(UITableViewCellStyle.Default, cellIdentifier)
+            | cell -> cell
         cell.TextLabel.Text <- t.Description
         cell
     override x.RowSelected (tableView, indexPath) = 
@@ -27,11 +26,11 @@ type TaskDataSource(tasksource: task list, navigation: UINavigationController) =
     override x.CanEditRow (view, indexPath) = true
     override x.CommitEditingStyle(view, editingStyle, indexPath) = 
         match editingStyle with 
-            | UITableViewCellEditingStyle.Delete ->
-                Data.DeleteTask tasks.[indexPath.Item].Description
-                tasks.RemoveAt(indexPath.Item)
-                view.DeleteRows([|indexPath|], UITableViewRowAnimation.Fade)
-            | _ -> Console.WriteLine "CommitEditingStyle:None called"
+        | UITableViewCellEditingStyle.Delete ->
+            Data.DeleteTask tasks.[indexPath.Item].Description
+            tasks.RemoveAt(indexPath.Item)
+            view.DeleteRows([|indexPath|], UITableViewRowAnimation.Fade)
+        | _ -> Console.WriteLine "CommitEditingStyle:None called"
 
 type TaskyViewController () =
     inherit UIViewController ()
@@ -41,9 +40,9 @@ type TaskyViewController () =
     override this.ViewDidLoad () =
         base.ViewDidLoad ()
         let addNewTask = 
-            new EventHandler(fun sender eventargs -> 
-                this.NavigationController.PushViewController (new AddTaskViewController(), true)
-            )
+            EventHandler(fun sender eventargs -> 
+                this.NavigationController.PushViewController (new AddTaskViewController(), true))
+
         this.NavigationItem.SetRightBarButtonItem (new UIBarButtonItem(UIBarButtonSystemItem.Add, addNewTask), false)
         table.Frame <- this.View.Bounds
         this.View.Add table 

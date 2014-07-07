@@ -12,54 +12,42 @@ type AddTaskViewController (task:task, isNew:bool) =
     override this.ViewDidLoad () =
         base.ViewDidLoad ()
 
-        let addView = new UIView(this.View.Bounds)
-        addView.BackgroundColor <- UIColor.White
+        let addView = new UIView(this.View.Bounds, BackgroundColor = UIColor.White)
 
-        let description = new UITextField(new RectangleF(20.f, 64.f, 280.f, 50.f))
-        description.Text <- task.Description
-        description.Placeholder <- "task description"
+        let description = new UITextField(RectangleF(20.f, 64.f, 280.f, 50.f),
+                                          Text = task.Description,
+                                          Placeholder = "task description")
         addView.Add description
 
-        let completeLabel = new UILabel(new RectangleF(20.f, 114.f, 100.f, 30.f))
-        completeLabel.Text <- "Complete "
+        let completeLabel = new UILabel(RectangleF(20.f, 114.f, 100.f, 30.f), Text = "Complete ")
         addView.Add completeLabel
 
-        let completeCheck = new UISwitch(new RectangleF(120.f, 114.f, 200.f, 30.f))
+        let completeCheck = new UISwitch(RectangleF(120.f, 114.f, 200.f, 30.f))
         completeCheck.SetState(task.Complete,false)
-        let changeCompleteStatus = 
-            new EventHandler (fun sender eventargs ->
-                task.Complete <- completeCheck.On
-            ) 
-        completeCheck.TouchDragInside.AddHandler changeCompleteStatus
+
+        completeCheck.TouchDragInside.AddHandler (fun sender eventargs -> task.Complete <- completeCheck.On)
         addView.Add completeCheck
 
-        let addedLabel = new UILabel(new RectangleF(20.f, 214.f, 280.f, 50.f))
+        let addedLabel = new UILabel(RectangleF(20.f, 214.f, 280.f, 50.f))
         addView.Add addedLabel
 
-        let addUpdateButton = UIButton.FromType(UIButtonType.RoundedRect)
-        addUpdateButton.Frame <- new RectangleF(20.f, 164.f, 280.f, 50.f)
+        let addUpdateButton = UIButton.FromType(UIButtonType.RoundedRect, Frame = RectangleF(20.f, 164.f, 280.f, 50.f))
 
-        let addUpdateHandler = 
-            new EventHandler(fun sender eventargs -> 
+        addUpdateButton.TouchUpInside.AddHandler
+            (fun _ _ -> 
                 match isNew with 
-                    | true -> 
-                        Data.AddTask description.Text
-                        addedLabel.Text <- "Added!"
-                    | false -> 
-                        Data.UpdateTask description.Text completeCheck.On
-                        addedLabel.Text <- "Updated!"
-                description.Text <- ""
-            )
+                | true -> 
+                    Data.AddTask description.Text
+                    addedLabel.Text <- "Added!"
+                | false -> 
+                    Data.UpdateTask description.Text completeCheck.On
+                    addedLabel.Text <- "Updated!"
+                description.Text <- "")
 
-        addUpdateButton.TouchUpInside.AddHandler addUpdateHandler
         addUpdateButton.SetTitle("Save", UIControlState.Normal)
         addView.Add addUpdateButton
 
-        let clearLabel = 
-            new EventHandler(fun sender eventargs -> 
-                addedLabel.Text <- ""
-            )
-        description.TouchDown.AddHandler clearLabel
+        description.TouchDown.AddHandler (fun _ _ -> addedLabel.Text <- "")
 
         this.View.Add addView
        
