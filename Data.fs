@@ -5,12 +5,15 @@ open System.IO
 
 module Data = 
 
-    type sql = SqlDataProvider<ConnectionString = @"Data Source=Your Data Source Path;Version=3;",
+    [<Literal>]
+    let connectionString = @"Data Source=" + __SOURCE_DIRECTORY__ + @"/Resources/task.sqlite;Version=3;" 
+
+    type sql = SqlDataProvider<ConnectionString = connectionString,
                                DatabaseVendor = Common.DatabaseProviderTypes.SQLITE,
                                ResolutionPath = @"/Library/Frameworks/Mono.framework/Libraries/mono/4.5/",
                                UseOptionTypes = false>
 
-    type task = { Description : string; mutable Complete : bool; }
+    type task = { Description : string; mutable Complete : bool }
 
     let private ctx = sql.GetDataContext()
 
@@ -20,8 +23,9 @@ module Data =
                     select {Description=data.task; Complete = false}}
                 |> Seq.toList
 
-    let private findTask description = ctx.``[main].[tasks]``
-                                        |> Seq.find (fun t -> t.task = description)
+    let private findTask description =
+        ctx.``[main].[tasks]``
+        |> Seq.find (fun t -> t.task = description)
 
     let AddTask description = 
         let newTask = ctx.``[main].[tasks]``.Create()
@@ -36,8 +40,6 @@ module Data =
 
     let UpdateTask description complete = 
         let task = findTask description
-        task.complete <- match complete with 
-                            | false -> 0L
-                            | true -> 1L
+        task.complete <- if complete then 1L else 0L
         task.task <- description
         ctx.SubmitUpdates()
