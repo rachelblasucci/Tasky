@@ -5,7 +5,7 @@ open System.IO
 
 module Data = 
 
-    type sql = SqlDataProvider<ConnectionString = @"Data Source=/Users/rachel/Dropbox/Code/Github/Tasky/Resources/task.sqlite;Version=3;",
+    type sql = SqlDataProvider<ConnectionString = @"Data Source=Your Data Source Path;Version=3;",
                                DatabaseVendor = Common.DatabaseProviderTypes.SQLITE,
                                ResolutionPath = @"/Library/Frameworks/Mono.framework/Libraries/mono/4.5/",
                                UseOptionTypes = false>
