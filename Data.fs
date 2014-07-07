@@ -6,7 +6,7 @@ open System.IO
 module Data = 
 
     [<Literal>]
-    let private connectionString = @"Data Source=" + __SOURCE_DIRECTORY__ + @"/Resources/task.sqlite;Version=3;" 
+    let connectionString = @"Data Source=" + __SOURCE_DIRECTORY__ + @"/Resources/task.sqlite;Version=3;" 
 
     type sql = SqlDataProvider<ConnectionString = connectionString,
                                DatabaseVendor = Common.DatabaseProviderTypes.SQLITE,
