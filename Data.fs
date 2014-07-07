@@ -5,7 +5,10 @@ open System.IO
 
 module Data = 
 
-    type sql = SqlDataProvider<ConnectionString = @"Data Source=Your Data Source Path;Version=3;",
+    [<Literal>]
+    let connectionString = @"Data Source=" + __SOURCE_DIRECTORY__ + @"/Resources/task.sqlite;Version=3;" 
+
+    type sql = SqlDataProvider<ConnectionString = connectionString,
                                DatabaseVendor = Common.DatabaseProviderTypes.SQLITE,
                                ResolutionPath = @"/Library/Frameworks/Mono.framework/Libraries/mono/4.5/",
                                UseOptionTypes = false>
