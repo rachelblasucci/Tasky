@@ -13,19 +13,19 @@ module Data =
                                ResolutionPath = @"/Library/Frameworks/Mono.framework/Libraries/mono/4.5/",
                                UseOptionTypes = false>
 
-    type task = { Description : string; mutable Complete : bool }
+    type task = {Id : Int64; Description : string; mutable Complete : bool }
 
     let private ctx = sql.GetDataContext()
 
     let GetIncompleteTasks () = 
         query { for data in ctx.``[main].[tasks]`` do 
                     where (data.complete = 0L)
-                    select {Description=data.task; Complete = false}}
+                    select {Id = data.t1key; Description = data.task; Complete = false}}
                 |> Seq.toList
 
-    let private findTask description =
+    let private findTask id =
         ctx.``[main].[tasks]``
-        |> Seq.find (fun t -> t.task = description)
+        |> Seq.find (fun t -> t.t1key = id)
 
     let AddTask description = 
         let newTask = ctx.``[main].[tasks]``.Create()
@@ -33,13 +33,13 @@ module Data =
         newTask.complete <- 0L
         ctx.SubmitUpdates()
 
-    let DeleteTask description = 
-        let task = findTask description
+    let DeleteTask id = 
+        let task = findTask id
         task.Delete()
         ctx.SubmitUpdates()
 
-    let UpdateTask description complete = 
-        let task = findTask description
+    let UpdateTask id description complete = 
+        let task = findTask id
         task.complete <- if complete then 1L else 0L
         task.task <- description
         ctx.SubmitUpdates()

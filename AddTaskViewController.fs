@@ -8,7 +8,8 @@ open Data
 
 type AddTaskViewController (task:task, isNew:bool) =
     inherit UIViewController ()
-    new() = new AddTaskViewController ({Description=""; Complete=false}, true)
+    new() = new AddTaskViewController ({Id = 0L; Description = ""; Complete = false}, true)
+
     override this.ViewDidLoad () =
         base.ViewDidLoad ()
 
@@ -47,10 +48,8 @@ type AddTaskViewController (task:task, isNew:bool) =
                     Data.AddTask taskDescription
                     addedLabel.Text <- "Added!"
                 | false -> 
-                    Data.UpdateTask taskDescription completeCheck.On
-                    addedLabel.Text <- "Updated!"
-
-                description.Text <- "")
+                    Data.UpdateTask task.Id taskDescription completeCheck.On
+                    addedLabel.Text <- "Updated!")
 
         addUpdateButton.SetTitle("Save", UIControlState.Normal)
         addView.Add addUpdateButton
