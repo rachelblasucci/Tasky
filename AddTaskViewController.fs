@@ -36,14 +36,20 @@ type AddTaskViewController (task:task, isNew:bool) =
         let addUpdateButton = UIButton.FromType(UIButtonType.RoundedRect, Frame = RectangleF(20.f, 164.f, 280.f, 50.f))
 
         addUpdateButton.TouchUpInside.AddHandler
-            (fun _ _ -> 
+              (fun _ _ -> 
+                let taskDescription =
+                   match description.Text.Trim() with
+                   | "" -> "New task"
+                   | _ -> description.Text
+
                 match isNew with 
                 | true -> 
-                    Data.AddTask description.Text
+                    Data.AddTask taskDescription
                     addedLabel.Text <- "Added!"
                 | false -> 
-                    Data.UpdateTask description.Text completeCheck.On
+                    Data.UpdateTask taskDescription completeCheck.On
                     addedLabel.Text <- "Updated!"
+
                 description.Text <- "")
 
         addUpdateButton.SetTitle("Save", UIControlState.Normal)
