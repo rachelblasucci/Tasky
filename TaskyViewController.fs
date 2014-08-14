@@ -9,9 +9,12 @@ open Data
 
 type TaskDataSource(tasksource: task list, navigation: UINavigationController) = 
     inherit UITableViewSource()
+
     let tasks = ResizeArray(tasksource)
     let cellIdentifier = "TaskCell"
+
     override x.RowsInSection(view, section) = tasks.Count
+
     override x.GetCell(view, indexPath) = 
         let t = tasks.[indexPath.Item]
         let cell =
@@ -20,14 +23,17 @@ type TaskDataSource(tasksource: task list, navigation: UINavigationController) =
             | cell -> cell
         cell.TextLabel.Text <- t.Description
         cell
+
     override x.RowSelected (tableView, indexPath) = 
         tableView.DeselectRow (indexPath, false)
         navigation.PushViewController (new AddTaskViewController(tasks.[indexPath.Item], false), true)
+
     override x.CanEditRow (view, indexPath) = true
+
     override x.CommitEditingStyle(view, editingStyle, indexPath) = 
         match editingStyle with 
         | UITableViewCellEditingStyle.Delete ->
-            Data.DeleteTask tasks.[indexPath.Item].Description
+            Data.DeleteTask tasks.[indexPath.Item].Id
             tasks.RemoveAt(indexPath.Item)
             view.DeleteRows([|indexPath|], UITableViewRowAnimation.Fade)
         | _ -> Console.WriteLine "CommitEditingStyle:None called"

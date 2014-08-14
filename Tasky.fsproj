@@ -129,6 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
+    <None Include="Entitlements.plist" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data.fs" />
@@ -138,6 +139,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
   <ItemGroup>
+    <BundleResource Include="Resources\Default-568h%402x.png" />
     <BundleResource Include="Resources\task.sqlite" />
   </ItemGroup>
 </Project>

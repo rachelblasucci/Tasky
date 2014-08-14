@@ -8,7 +8,8 @@ open Data
 
 type AddTaskViewController (task:task, isNew:bool) =
     inherit UIViewController ()
-    new() = new AddTaskViewController ({Description=""; Complete=false}, true)
+    new() = new AddTaskViewController ({Id = 0L; Description = ""; Complete = false}, true)
+
     override this.ViewDidLoad () =
         base.ViewDidLoad ()
 
@@ -16,7 +17,8 @@ type AddTaskViewController (task:task, isNew:bool) =
 
         let description = new UITextField(RectangleF(20.f, 64.f, 280.f, 50.f),
                                           Text = task.Description,
-                                          Placeholder = "task description")
+                                          Placeholder = "Task description",
+                                          ClearButtonMode = UITextFieldViewMode.WhileEditing)
         addView.Add description
 
         let completeLabel = new UILabel(RectangleF(20.f, 114.f, 100.f, 30.f), Text = "Complete ")
@@ -28,21 +30,26 @@ type AddTaskViewController (task:task, isNew:bool) =
         completeCheck.TouchDragInside.AddHandler (fun sender eventargs -> task.Complete <- completeCheck.On)
         addView.Add completeCheck
 
-        let addedLabel = new UILabel(RectangleF(20.f, 214.f, 280.f, 50.f))
+        let addedLabel = new UILabel(RectangleF(20.f, 214.f, 280.f, 50.f),
+                                     TextAlignment = UITextAlignment.Center)
         addView.Add addedLabel
 
         let addUpdateButton = UIButton.FromType(UIButtonType.RoundedRect, Frame = RectangleF(20.f, 164.f, 280.f, 50.f))
 
         addUpdateButton.TouchUpInside.AddHandler
-            (fun _ _ -> 
+              (fun _ _ -> 
+                let taskDescription =
+                   match description.Text.Trim() with
+                   | "" -> "New task"
+                   | _ -> description.Text
+
                 match isNew with 
                 | true -> 
-                    Data.AddTask description.Text
+                    Data.AddTask taskDescription
                     addedLabel.Text <- "Added!"
                 | false -> 
-                    Data.UpdateTask description.Text completeCheck.On
-                    addedLabel.Text <- "Updated!"
-                description.Text <- "")
+                    Data.UpdateTask task.Id taskDescription completeCheck.On
+                    addedLabel.Text <- "Updated!")
 
         addUpdateButton.SetTitle("Save", UIControlState.Normal)
         addView.Add addUpdateButton
