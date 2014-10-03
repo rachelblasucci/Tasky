@@ -49,7 +49,9 @@ type TaskyViewController () =
             EventHandler(fun sender eventargs -> 
                 this.NavigationController.PushViewController (new AddTaskViewController(), true))
 
-        this.NavigationItem.SetRightBarButtonItem (new UIBarButtonItem(UIBarButtonSystemItem.Add, addNewTask), false)
+        let button = new UIBarButtonItem(UIBarButtonSystemItem.Add, addNewTask)
+
+        this.NavigationItem.SetRightBarButtonItem (button, false)
         table.Frame <- this.View.Bounds
         this.View.Add table 
 

@@ -121,7 +121,10 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="FSharp.Data.SqlProvider">
-      <HintPath>References\FSharp.Data.SqlProvider.dll</HintPath>
+      <HintPath>..\..\Third Party\SQLProvider\bin\FSharp.Data.SqlProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration">
+      <HintPath>..\..\..\..\..\..\Library\Frameworks\Mono.framework\Libraries\mono\4.5\System.Configuration.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -142,4 +145,5 @@
     <BundleResource Include="Resources\Default-568h%402x.png" />
     <BundleResource Include="Resources\task.sqlite" />
   </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
 </Project>

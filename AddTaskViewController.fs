@@ -24,11 +24,11 @@ type AddTaskViewController (task:task, isNew:bool) =
         let completeLabel = new UILabel(RectangleF(20.f, 114.f, 100.f, 30.f), Text = "Complete ")
         addView.Add completeLabel
 
-        let completeCheck = new UISwitch(RectangleF(120.f, 114.f, 200.f, 30.f))
-        completeCheck.SetState(task.Complete,false)
+        let completeCheckbox = new UISwitch(RectangleF(120.f, 114.f, 200.f, 30.f))
+        completeCheckbox.SetState(task.Complete,false)
 
-        completeCheck.TouchDragInside.AddHandler (fun sender eventargs -> task.Complete <- completeCheck.On)
-        addView.Add completeCheck
+        completeCheckbox.TouchDragInside.AddHandler (fun sender eventargs -> task.Complete <- completeCheckbox.On)
+        addView.Add completeCheckbox
 
         let addedLabel = new UILabel(RectangleF(20.f, 214.f, 280.f, 50.f),
                                      TextAlignment = UITextAlignment.Center)
@@ -48,7 +48,7 @@ type AddTaskViewController (task:task, isNew:bool) =
                     Data.AddTask taskDescription
                     addedLabel.Text <- "Added!"
                 | false -> 
-                    Data.UpdateTask task.Id taskDescription completeCheck.On
+                    Data.UpdateTask task.Id taskDescription completeCheckbox.On
                     addedLabel.Text <- "Updated!")
 
         addUpdateButton.SetTitle("Save", UIControlState.Normal)
